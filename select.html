@@ -1,0 +1,120 @@
+<meta charset="utf-8">
+<style>
+body {
+	text-align: center;
+}
+/* tabularmaps */
+.tabularmaps {
+	border-spacing: 1vw;
+	border-collapse: separate;
+	display: inline-block;
+	width: 90vw;
+	height: 67vw;
+	position: relative;
+}
+.tabularmaps td {
+	width: calc(90vw / 4);
+	height: calc(60vw / 5);
+	font-size: 3vw;
+	vertical-align: middle;
+	text-align: center;
+	border-radius: .5vw;
+	border: 1px solid #333;
+	margin: 20px;
+}
+.tabularmaps a {
+	text-decoration: none;
+	color: black;
+}
+.tabularmaps a:visited {
+	text-decoration: none;
+	color: #055;
+}
+.tmnull {
+	background-color: #eee;
+}
+#tmtitle {
+	color: white;
+}
+</style>
+<script type="module">
+import { css, h1, add, create, link, hr } from "https://js.sabae.cc/stdom.js";
+
+const TABULARMAP_SRC = `
+	あわら市	勝山市	大野市
+坂井市	福井市	永平寺町	池田町
+越前町	鯖江市	越前市	南越前町
+高浜町	若狭町	美浜町	敦賀市
+おおい町	小浜市		`;
+
+onload = () => {
+	css();
+	h1("お住まいの市町を選択してください");
+	const tbl = makeTabularMap(TABULARMAP_SRC);
+	document.body.appendChild(tbl);
+	//tmtitle.textContent = "福井県";
+	//document.getElementById("鯖江市").style.backgroundColor = "#ebb"
+	linkCells(tbl);
+	hr();
+	link("福井県ワクチンダッシュボード(仮) by Code for Fukui", "https://code4fukui.github.io/");
+};
+
+
+const linkCells = (div) => {
+	const tbody = div.childNodes[0]; // .childNodes[0];
+	for (const tr of tbody.childNodes) {
+		for (const td of tr.childNodes) {
+			const name = td.textContent;
+			if (name.length > 0) {
+				//const url = "https://ja.wikipedia.org/wiki/" + encodeURIComponent(name);
+				const url = "./#" + encodeURIComponent(name);;
+				td.innerHTML = "<a href=" + url + ">" + name + "</a>";
+			}
+		}
+	}
+};
+
+const makeTabularMap = function(src) {
+	const items = [];
+	const ssrc = src.substring(1).split('\n');
+	for (let ss of ssrc) {
+		items.push(ss.split('\t'));
+	}
+	const s = [];
+	let maxcol = 0;
+	let nmaxcol = -1;
+	s.push('<table class=tabularmaps>');
+	for (let row of items) {
+		s.push('<tr>');
+		for (let item of row) {
+			if (item.length == 0) {
+				let s2 = s[s.length - 1]
+				if (s2.startsWith("<td class=tmnull colspan=")) {
+					s.pop();
+					const ncol = parseInt(s2.substring("<td class=tmnull colspan=".length)) + 1;
+					s.push('<td class=tmnull colspan=' + ncol + '</td>');
+					if (maxcol < ncol) {
+						maxcol = ncol;
+						nmaxcol = s.length - 1;
+					}
+				} else {
+					s.push('<td class=tmnull colspan=1></td>');
+					if (maxcol < 1) {
+						maxcol = 1;
+						nmaxcol = s.length - 1;
+					}
+				}
+			} else {
+				s.push('<td id="' + item + '">' + item + '</td>')
+			}
+		}
+		s.push('</tr>')
+	}
+	s[nmaxcol] = s[nmaxcol].replace('<td class=tmnull colspan=', '<td class=tmnull id=tmtitle colspan=')
+	s.push('</table>')
+	const tbl = create("table");
+	tbl.innerHTML = s.join('');
+	tbl.className = "tabularmaps";
+	return tbl;
+}
+</script>
