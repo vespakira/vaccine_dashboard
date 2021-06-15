@@ -8,7 +8,7 @@ body {
 	border-spacing: 1vw;
 	border-collapse: separate;
 	display: inline-block;
-	width: 90vw;
+	x-width: 80vw;
 	height: 67vw;
 	position: relative;
 }
@@ -20,7 +20,7 @@ body {
 	text-align: center;
 	border-radius: .5vw;
 	border: 1px solid #333;
-	margin: 20px;
+	margin: 3vw;
 }
 .tabularmaps a {
 	text-decoration: none;
@@ -38,7 +38,7 @@ body {
 }
 </style>
 <script type="module">
-import { css, h1, add, create, link, hr } from "https://js.sabae.cc/stdom.js";
+import { style, css, h1, add, create, link, hr } from "https://js.sabae.cc/stdom.js";
 
 const TABULARMAP_SRC = `
 	あわら市	勝山市	大野市
@@ -49,6 +49,7 @@ const TABULARMAP_SRC = `
 
 onload = () => {
 	css();
+	style({ body: { "max-width": "90vw" }, h1: { margin: "1.2em 0" }});
 	h1("お住まいの市町を選択してください");
 	const tbl = makeTabularMap(TABULARMAP_SRC);
 	document.body.appendChild(tbl);
