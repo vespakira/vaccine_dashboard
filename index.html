@@ -23,8 +23,39 @@
 既に予約が埋まっている可能性がございますので、その旨ご了承ください。<br>
 <br>
 
-<script type="module" src="https://code4sabae.github.io/js/csv-viewer.js"></script>
-<csv-viewer src="./data.csv" name="ワクチン接種予約状況オープンデータ"></csv-viewer>
+<div id=table></div>
+<script type="module">
+import { CSV } from "https://js.sabae.cc/CSV.js";
+import { Table } from "https://js.sabae.cc/Table.js";
+
+const make = async () => {
+  const url = "https://push.sabae.cc/817.csv";
+  const data = CSV.toJSON(await CSV.fetch(url));
+  console.log(data);
+  /*
+住所: "松原町１−３９"
+備考: "定期通院の方優先"
+医療機関名: "川上医院"
+申込URL: ""
+申込先名: "川上医院"
+申込期限: ""
+申込電話番号: "0770-22-0977"
+空き状況: "2021-07-01"
+  */
+  const data2 = data.filter(d => d.空き状況).map(d => {
+    return {
+      医療機関名: d.医療機関名,
+      市町: d[""],
+      申込: d.申込URL || "tel:" + d.申込電話番号,
+      備考: d.備考,
+      空き状況: d.空き状況,
+    };
+  });
+  table.appendChild(Table.makeTable(CSV.fromJSON(data2)));
+};
+make();
+</script>
 
 <hr>
-<a href=https://github.com/code4fukui/vaccine_dashboard/>福井ワクチンダッシュボード by Code for Fukui (src on GitHub)</a>
+DATA: <a href="https://push.sabae.cc/817">福井ワクチン接種予約状況オープンデータ</a><br>
+APP: <a href=https://github.com/code4fukui/vaccine_dashboard/>福井ワクチンダッシュボード by Code for Fukui (src on GitHub)</a>
