@@ -29,6 +29,8 @@ import { CSV } from "https://js.sabae.cc/CSV.js";
 import { Table } from "https://js.sabae.cc/Table.js";
 
 const make = async () => {
+  const city = decodeURIComponent(document.location.hash.substring(1));
+
   const url = "https://push.sabae.cc/817.csv";
   const data = CSV.toJSON(await CSV.fetch(url));
   console.log(data);
@@ -42,7 +44,7 @@ const make = async () => {
 申込電話番号: "0770-22-0977"
 空き状況: "2021-07-01"
   */
-  const data2 = data.filter(d => d.空き状況).map(d => {
+  const data2 = data.filter(d => d.空き状況 && (city ? d[""] == city : true)).map(d => {
     return {
       医療機関名: d.医療機関名,
       市町: d[""],
