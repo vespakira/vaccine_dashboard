@@ -43,14 +43,19 @@ const make = async () => {
 申込期限: ""
 申込電話番号: "0770-22-0977"
 空き状況: "2021-07-01"
+
+医療機関名、市町名、住所（町域以降）、空き状況、申込先名、申込電話番号、申込URL、申込期限、備考
   */
   const data2 = data.filter(d => d.空き状況 && (city ? d[""] == city : true)).map(d => {
     return {
       医療機関名: d.医療機関名,
-      市町: d[""],
-      申込: d.申込URL || "tel:" + d.申込電話番号,
-      備考: d.備考,
+      市町名: d[""],
+      住所: d.住所,
       空き状況: d.空き状況,
+      申込先名: d.申込先名,
+      申込: d.申込URL || "tel:" + d.申込電話番号,
+      申込期限: d.申込期限,
+      備考: d.備考,
     };
   });
   table.appendChild(Table.makeTable(CSV.fromJSON(data2)));
