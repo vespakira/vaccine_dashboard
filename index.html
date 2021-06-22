@@ -27,6 +27,21 @@
 <script type="module">
 import { CSV } from "https://js.sabae.cc/CSV.js";
 import { Table } from "https://js.sabae.cc/Table.js";
+import { Day } from "https://code4fukui.github.io/day-es/Day.js";
+
+const formatDates = (dates) => {
+  if (!dates || dates.trim().length == 0) {
+    return "";
+  }
+  return dates.split(",").map(d => {
+    const day = new Day(d);
+    return day.month + "/" + day.day;
+  }).join("、");
+};
+//alert(formatDates("2021-06-22,2021-07-01"));
+//alert(formatDates("2021-06-22"));
+//alert(formatDates(""));
+//alert(formatDates(null));
 
 const make = async () => {
   const city = decodeURIComponent(document.location.hash.substring(1));
@@ -51,7 +66,7 @@ const make = async () => {
       医療機関名: d.医療機関名,
       市町名: d[""],
       住所: d.住所,
-      空き状況: d.空き状況,
+      空き状況: formatDates(d.空き状況),
       申込先名: d.申込先名,
       申込: d.申込URL || "tel:" + d.申込電話番号,
       申込期限: d.申込期限,
