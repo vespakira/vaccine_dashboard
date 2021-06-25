@@ -84,9 +84,12 @@ const linkCells = (div, data) => {
 	for (const tr of tbody.childNodes) {
 		for (const td of tr.childNodes) {
 			const name = td.textContent;
-			if (name.length > 0 && data.find(d => d["市町名"] == name)) {
+			if (name == "福井市") {
+				const url = "https://area34.smp.ne.jp/area/switch/00002G0002F8KgF0he/resLoginSwitching";
+				td.innerHTML = "<a href=" + url + ">" + name + "</a>";
+			} else if (name.length > 0 && data.find(d => d["市町名"] == name)) {
 				//const url = "https://ja.wikipedia.org/wiki/" + encodeURIComponent(name);
-				const url = "./#" + encodeURIComponent(name);;
+				const url = "./#" + encodeURIComponent(name);
 				td.innerHTML = "<a href=" + url + ">" + name + "</a>";
 			}
 		}
