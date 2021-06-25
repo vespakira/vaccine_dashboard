@@ -27,81 +27,16 @@
 <script type="module">
 import { CSV } from "https://js.sabae.cc/CSV.js";
 import { Table } from "https://js.sabae.cc/Table.js";
-import { Day } from "https://code4fukui.github.io/day-es/Day.js";
-
-const url = "https://push.sabae.cc/817.csv";
-
-const formatDates = (dates) => {
-  if (!dates || dates.trim().length == 0) {
-    return "";
-  }
-  return dates.split(",").map(d => {
-    const day = new Day(d);
-    return day.month + "/" + day.day;
-  }).join("、");
-};
-const withIn2Weeks = (d) => {
-  const today = new Day(new Date());
-  const twoweekslater = today.dayAfter(13);
-  console.log(d);
-  return new Day(d).includes(today, twoweekslater);
-};
-const filterDates = (dates) => {
-  if (!dates || dates.trim().length == 0) {
-    return "";
-  }
-  return dates.split(",").filter(withIn2Weeks).join(",");
-};
-//alert(withIn2Weeks("2021-06-23"));
-//alert(withIn2Weeks("2021-06-24"));
-//alert(withIn2Weeks("2021-07-21"));
-const test = [
-"2021-06-21",
-"2021-06-22",
-"2021-06-23",
-"2021-06-24",
-];
-//alert(filterDates(test.join(",")));
-//alert(formatDates(filterDates(test.join(","))));
-//alert(formatDates("2021-06-22,2021-07-01"));
-//alert(formatDates("2021-06-22"));
-//alert(formatDates(""));
-//alert(formatDates(null));
+import { fetchData } from "./fetchData.js";
 
 const make = async () => {
   const city = decodeURIComponent(document.location.hash.substring(1));
-  const data = CSV.toJSON(await CSV.fetch(url));
-  console.log(data);
-  /*
-住所: "松原町１−３９"
-備考: "定期通院の方優先"
-医療機関名: "川上医院"
-申込URL: ""
-申込先名: "川上医院"
-申込期限: ""
-申込電話番号: "0770-22-0977"
-空き状況: "2021-07-01"
-
-医療機関名、市町名、住所（町域以降）、空き状況、申込先名、申込電話番号、申込URL、申込期限、備考
-  */
-  data.forEach(d => d.空き状況2週間以内 = filterDates(d.空き状況));
-  const data2 = data.filter(d => (city ? d[""] == city : true) && (d.空き状況2週間以内 || d.id == 680)).map(d => {
-    return {
-      医療機関名: d.医療機関名,
-      市町名: d[""],
-      住所: d.住所,
-      空き状況: formatDates(d.空き状況2週間以内),
-      申込先名: d.申込先名,
-      申込: d.申込URL || "tel:" + d.申込電話番号,
-      申込期限: d.申込期限,
-      備考: d.備考,
-    };
-  });
-  table.appendChild(Table.makeTable(CSV.fromJSON(data2)));
+  const data = await fetchData(city);
+  table.appendChild(Table.makeTable(CSV.fromJSON(data)));
 };
 make();
 </script>
 
 <hr>
 DATA: <a href="https://push.sabae.cc/817">福井ワクチン接種予約状況オープンデータ</a><br>
-APP: <a href=https://github.com/code4fukui/vaccine_dashboard/>福井ワクチンダッシュボード by Code for Fukui (src on GitHub)</a>
+APP: <a href=https://github.com/code4fukui/vaccine_dashboard/>FUKUIワクチンダッシュボード by Code for Fukui (src on GitHub)</a>

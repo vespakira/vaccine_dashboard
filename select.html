@@ -22,6 +22,7 @@ body {
 	border: 1px solid #333;
 	margin: 3vw;
 }
+/*
 .tabularmaps a {
 	text-decoration: none;
 	color: black;
@@ -30,6 +31,7 @@ body {
 	text-decoration: none;
 	color: #055;
 }
+*/
 .tmnull {
 	background-color: #eee;
 }
@@ -39,6 +41,7 @@ body {
 </style>
 <script type="module">
 import { style, css, h1, add, create, link, hr } from "https://js.sabae.cc/stdom.js";
+import { fetchData } from "./fetchData.js";
 
 const TABULARMAP_SRC = `
 	あわら市	勝山市	大野市
@@ -47,26 +50,28 @@ const TABULARMAP_SRC = `
 高浜町	若狭町	美浜町	敦賀市
 おおい町	小浜市		`;
 
-onload = () => {
+onload = async () => {
 	css();
 	style({ body: { "max-width": "90vw" }, h1: { margin: "1.2em 0" }});
 	h1("お住まいの市町を選択してください");
+
+	const data = await fetchData();
+
 	const tbl = makeTabularMap(TABULARMAP_SRC);
 	document.body.appendChild(tbl);
 	//tmtitle.textContent = "福井県";
 	//document.getElementById("鯖江市").style.backgroundColor = "#ebb"
-	linkCells(tbl);
+	linkCells(tbl, data);
 	hr();
-	link("福井県ワクチンダッシュボード by Code for Fukui (src on GitHub)", "https://github.com/code4fukui/vaccine_dashboard/");
+	link("FUKUIワクチンダッシュボード by Code for Fukui (src on GitHub)", "https://github.com/code4fukui/vaccine_dashboard/");
 };
 
-
-const linkCells = (div) => {
+const linkCells = (div, data) => {
 	const tbody = div.childNodes[0]; // .childNodes[0];
 	for (const tr of tbody.childNodes) {
 		for (const td of tr.childNodes) {
 			const name = td.textContent;
-			if (name.length > 0) {
+			if (name.length > 0 && data.find(d => d["市町名"] == name)) {
 				//const url = "https://ja.wikipedia.org/wiki/" + encodeURIComponent(name);
 				const url = "./#" + encodeURIComponent(name);;
 				td.innerHTML = "<a href=" + url + ">" + name + "</a>";
