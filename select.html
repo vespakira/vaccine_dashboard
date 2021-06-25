@@ -57,6 +57,14 @@ onload = async () => {
 
 	const data = await fetchData();
 
+	
+公開の対象は自ら予約を受け付けており、かつ予約枠に空き（概ね先二週間程度）がある医療機関です。
+（敦賀市、大野市、鯖江市、あわら市、越前市、坂井市、池田町、南越前町、越前町）
+※空きがある医療機関が１件以上ある市町のみクリックできます。<br>
+
+	
+	
+	
 	const tbl = makeTabularMap(TABULARMAP_SRC);
 	document.body.appendChild(tbl);
 	//tmtitle.textContent = "福井県";
